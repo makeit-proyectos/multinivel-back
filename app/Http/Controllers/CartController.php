@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Routing\Redirector;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Producto;
@@ -24,7 +24,9 @@ class CartController extends Controller
 
     public function showCart()
     {
-        return response()->json(\Session::get('cart'));
+        
+        $cart = \Session::get('cart');
+        return response()->json($cart);
         
     }
 
@@ -36,11 +38,11 @@ class CartController extends Controller
         $cart = \Session::get('cart');
         
         //De forma predeterminada la cantidad es 1, en metodo update le vamos a dar la posibilidad de modificarlo.
-        $producto->quantity=1;
+        $producto->cantidad=1;
         $cart[$producto->slug] = $producto;
         \Session::put('cart', $cart);
 
-        return response()->json('Item agregado!');
+        return Redirect::route('cart-show');
     }
 
     //Actualizar cantidad item
